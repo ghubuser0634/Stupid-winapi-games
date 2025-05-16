@@ -129,6 +129,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
             );
         }
 
+        free_arr(&shuffled_100);
+
         next_bar = CreateWindow(
             "STATIC",
             (LPSTR) "Next: 1",
@@ -242,7 +244,27 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
                 Beep(B4, 800);
                 Beep(G4, 1600);
                 char congrat[41];
-                sprintf(&congrat, "Congrats, you finished the game in %d:%d", min_spent, sec_spent);
+                char time_str[5];
+        
+                if(min_spent<10){
+                    time_str[0] = 0x30;
+                    time_str[1] = one_digit_2_char(min_spent);
+                }else{
+                    time_str[0] = one_digit_2_char((min_spent-min_spent%10)/10);
+                    time_str[1] = one_digit_2_char(min_spent%10);
+                }
+                
+                time_str[2] = 0x3a;
+
+                if(sec_spent<10){
+                    time_str[3] = 0x30;
+                    time_str[4] = one_digit_2_char(sec_spent);
+                }else{
+                    time_str[3] = one_digit_2_char((sec_spent-sec_spent%10)/10);
+                    time_str[4] = one_digit_2_char(sec_spent%10);
+                }
+
+                sprintf(&congrat, "Congrats, you finished the game in %s !", time_str);
                 SetWindowText(time_bar, congrat);
             }
             
